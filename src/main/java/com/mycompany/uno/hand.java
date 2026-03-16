@@ -11,9 +11,13 @@ import java.util.ArrayList;
  */
 public class hand {
     private ArrayList<card> cartas;
-    
-    public hand(){
+    private String nombre; 
+    public hand(String nombre){
+        this.nombre = nombre;
         cartas = new ArrayList<>();
+    }
+    public String getNombre(){
+        return nombre;
     }
     
     public void agregarCarta(card c){
@@ -23,6 +27,10 @@ public class hand {
     public card jugarCarta(int indice){
         if (indice <0 || indice >= cartas.size()) return null;
         return cartas.remove(indice);
+    }
+    public card getCarta(int indice){
+        if (indice <0 || indice >= cartas.size()) return null;
+        return cartas.get(indice);
     }
     
     public int size(){

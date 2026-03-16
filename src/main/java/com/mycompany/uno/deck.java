@@ -26,10 +26,24 @@ public class deck {
         
         for (String color : colores){
             for (int i=0; i<=9; i++){
-                cartas.add(new card(color,i));
-                cartas.add(new card(color,i)); //dos de cada
+               cartas.add(new card(color,i));
+               cartas.add(new card(color,i)); //dos de cada 
             }
+            cartas.add(new card(color,"salto"));
+            cartas.add(new card(color,"salto")); //dos de cada
+                
+            cartas.add(new card(color,"reversa"));
+            cartas.add(new card(color,"reversa"));
+                
+            cartas.add(new card(color,"roba2"));
+            cartas.add(new card(color,"roba2"));
         }
+        for(int i=0; i<4; i++){
+            cartas.add(new card("negro","comodin"));
+            cartas.add(new card("negro","roba4"));
+        }
+        
+        
     }
     public void barajar(){
         Collections.shuffle(cartas);
