@@ -57,4 +57,5 @@ public class deck {
     public int cartasRestantes(){
         return cartas.size();
     }
+    
 }

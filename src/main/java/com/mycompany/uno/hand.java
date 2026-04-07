@@ -11,19 +11,13 @@ import java.util.ArrayList;
  */
 public class hand {
     private ArrayList<card> cartas;
-    private String nombre; 
-    public hand(String nombre){
-        this.nombre = nombre;
+    
+    public hand(){
         cartas = new ArrayList<>();
     }
-    public String getNombre(){
-        return nombre;
-    }
-    
     public void agregarCarta(card c){
         cartas.add(c);
     }
-    
     public card jugarCarta(int indice){
         if (indice <0 || indice >= cartas.size()) return null;
         return cartas.remove(indice);
@@ -32,22 +26,18 @@ public class hand {
         if (indice <0 || indice >= cartas.size()) return null;
         return cartas.get(indice);
     }
-    
     public int size(){
         return cartas.size();
     }
-    
     public boolean estaVacia(){
         return cartas.isEmpty();
     }
-    
     public void mostrarMano(){
-        System.out.println("Cartas en mano:");
+        System.out.println("Cartas en mano (" + cartas.size() + "):");
         for (int i=0; i< cartas.size(); i++){
             System.out.println(i + ": " + cartas.get(i));
         }
     }
-    
     /**
      * Verifica si tienen al menos una jugada valida
      */
