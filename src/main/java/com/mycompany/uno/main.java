@@ -6,9 +6,14 @@ package com.mycompany.uno;
 
 /**
  *
- * @author USER
+ * Clase principal que arranca el juego Uno
  */
 public class main {
+    
+    /**
+     * Método main: crea una instancia del juego y la inicia
+     * @param args Argumentos de línea de comandos
+     */
     public static void main(String[] args){
         game juego = new game();
         juego.iniciar();

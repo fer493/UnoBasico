@@ -3,18 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.uno;
+import com.mycompany.uno.card.Color;
+import com.mycompany.uno.card.Tipo;
 import java.util.ArrayList;
 import java.util.Collections;
 /**
- *
- * @author USER
+ *Representa el mazo de cartas del juego Uno
+ * contiene la lógica para crear, barajar y robar cartas
  */
 public class deck {
     private ArrayList<card> cartas;
     
+    /** Crea un mazo completo y lo baraja */
     public deck(){
         cartas=new ArrayList<>();
-        crearBaraja();
+        crearBaraja();  
         barajar();
     }
     /**
@@ -22,38 +25,51 @@ public class deck {
      * 4 colores, numeros 0-9, dos de cada numero
      */
     private void crearBaraja(){
-        String [] colores = {"rojo", "azul", "verde", "amarillo"};
-        
-        for (String color : colores){
-            for (int i=0; i<=9; i++){
-               cartas.add(new card(color,i));
-               cartas.add(new card(color,i)); //dos de cada 
+        for(Color color : Color.values()){
+
+        if(color == Color.NEGRO) continue;
+
+        // 0 una vez
+        cartas.add(new card(color, 0));
+
+        // 1–9 dos veces
+        for(int i = 1; i <= 9; i++){
+            for(int j = 0; j < 2; j++){
+                cartas.add(new card(color, i));
             }
-            cartas.add(new card(color,"salto"));
-            cartas.add(new card(color,"salto")); //dos de cada
-                
-            cartas.add(new card(color,"reversa"));
-            cartas.add(new card(color,"reversa"));
-                
-            cartas.add(new card(color,"roba2"));
-            cartas.add(new card(color,"roba2"));
         }
-        for(int i=0; i<4; i++){
-            cartas.add(new card("negro","comodin"));
-            cartas.add(new card("negro","roba4"));
+
+        // especiales
+        for(int i = 0; i < 2; i++){
+            cartas.add(new card(color, Tipo.SALTO));
+            cartas.add(new card(color, Tipo.REVERSA));
+            cartas.add(new card(color, Tipo.ROBA2));
         }
-        
+    }
+
+    // comodines
+    for(int i = 0; i < 4; i++){
+        cartas.add(new card(Color.NEGRO, Tipo.COMODIN));
+        cartas.add(new card(Color.NEGRO, Tipo.ROBA4));
+    }
         
     }
+    
+    /** Baraja las cartas del mazo */
     public void barajar(){
         Collections.shuffle(cartas);
     }
     
+    /** 
+    * Roba una carta del mazo
+    * @return Carta robada o null si el mazo está vacio
+    */
     public card robarCarta(){
         if (cartas.isEmpty()) return null;
         return cartas.remove(0);
-    }
+    } 
     
+    /** @return Npumero de cartas restantes en el mazo */
     public int cartasRestantes(){
         return cartas.size();
     }

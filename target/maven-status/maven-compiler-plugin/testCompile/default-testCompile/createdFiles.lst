@@ -1,0 +1,6 @@
+com\mycompany\uno\playerTest.class
+com\mycompany\uno\cardTest.class
+com\mycompany\uno\RuleEngineTest.class
+com\mycompany\uno\deckTest.class
+com\mycompany\uno\handTest.class
+com\mycompany\uno\TurnManagerTest.class

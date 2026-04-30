@@ -5,56 +5,106 @@
 
 package com.mycompany.uno;
 
-/**
- *
- * @author USER
+/** Representa una carta del juego Uno
+ *Pueder ser númerica o especial (salto, reversa, roba2, roba4, comodin)
+ * 
+ * contiene color, número y tipo, además de lógica para validar jugadas
  */
 public class card {
-    private String color;
+     private Color color;
     private int numero;
-    private String tipo;
+    private Tipo tipo;
     
-    public card(String color, int numero){
-        this.color=color;
-        this.numero=numero;   
-        this.tipo="numero";
+    /** 
+    * Constructor para cartas númericas
+    * @param color Color de la carta
+    * @param numero Numero de la carta
+    */
+    public card(Color color, int numero){
+        this.color = color;
+        this.numero = numero;
+        this.tipo = Tipo.NUMERO;
     }
-    public card(String color, String tipo){
-        this.color=color;
-        this.numero=-1;   
-        this.tipo=tipo;
+
+    /** 
+    * constructor para cartas especiales
+    * @param color Color de la carta
+    * @param tipo Tipo de carta especial
+    */
+    public card(Color color, Tipo tipo){
+        this.color = color;
+        this.numero = -1;
+        this.tipo = tipo;
     }
-    public String getTipo(){
-       return tipo; 
+    /** 
+    * Enumeración de tipos de carta 
+    */
+    public enum Tipo {
+        NUMERO, SALTO, REVERSA, ROBA2, ROBA4, COMODIN
     }
-    public String getColor(){
+    
+    /** 
+    * Enumeración de colores de carta 
+    */
+    public enum Color {
+        ROJO, AZUL, VERDE, AMARILLO, NEGRO
+    }
+
+    /** @return Tipo de la carta */
+    public Tipo getTipo(){
+        return tipo;
+    }
+
+    /** @return Color de la carta */
+    public Color getColor(){
         return color;
     }
+
+    /** @return Número de la carta (o -1 si es especial) */
     public int getNumero(){
         return numero;
     }
-    /**
-     * Regla basica de uno
-     * se puede jugar si coincide numero o color
-     */
+
+    /** 
+    * verifica si una carta puede jugarse sobre otra
+    * @param otra Carta en mesa
+    * @return true si es jugable, false en caso contrario
+    */
     public boolean esJugableSobre(card otra){
+
         if(otra == null) return true;
-        if(this.tipo.equals("comodin") || this.tipo.equals("roba4")) return true;
-        if(this.color.equals(otra.color)) return true;
-        if(this.numero == otra.numero && this.numero != -1) return true;
-        if(this.tipo.equals(otra.tipo) && !this.tipo.equals("numero"))return true;
+
+        // comodines siempre se pueden jugar
+        if(tipo == Tipo.COMODIN || tipo == Tipo.ROBA4){
+            return true;
+        }
+
+        // mismo color
+        if(color == otra.color){
+            return true;
+        }
+
+        // mismo número
+        if(tipo == Tipo.NUMERO && otra.tipo == Tipo.NUMERO &&
+           numero == otra.numero){
+            return true;
+        }
+
+        // mismo tipo (salto, reversa, etc.)
+        if(tipo == otra.tipo && tipo != Tipo.NUMERO){
+            return true;
+        }
+
         return false;
-    }    
+    }
+    
+    /** @return Representación en texto de la carta */
     @Override
     public String toString(){
-        if(tipo.equals("numero")){
+        if(tipo == Tipo.NUMERO){
             return color + " " + numero;
         }else{
             return color + " " + tipo;
-        }    
+        }
     }
-    
-    
-    
-    
 }

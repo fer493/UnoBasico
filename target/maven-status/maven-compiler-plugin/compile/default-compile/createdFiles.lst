@@ -1,6 +1,12 @@
 com\mycompany\uno\card.class
-com\mycompany\uno\player.class
+com\mycompany\uno\RuleEngine.class
 com\mycompany\uno\deck.class
+com\mycompany\uno\DiscardPile.class
 com\mycompany\uno\game.class
+com\mycompany\uno\card$Tipo.class
 com\mycompany\uno\main.class
 com\mycompany\uno\hand.class
+com\mycompany\uno\RuleEngine$1.class
+com\mycompany\uno\player.class
+com\mycompany\uno\TurnManager.class
+com\mycompany\uno\card$Color.class
