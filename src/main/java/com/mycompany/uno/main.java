@@ -4,6 +4,8 @@
  */
 package com.mycompany.uno;
 
+import javax.swing.SwingUtilities;
+
 /**
  *
  * Clase principal que arranca el juego Uno
@@ -15,8 +17,9 @@ public class main {
      * @param args Argumentos de línea de comandos
      */
     public static void main(String[] args){
-        game juego = new game();
-        juego.iniciar();
+        SwingUtilities.invokeLater(() -> {
+        new UnoUI();
+        });
     }
     
 }

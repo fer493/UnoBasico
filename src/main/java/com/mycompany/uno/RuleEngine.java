@@ -7,11 +7,11 @@ package com.mycompany.uno;
 import java.util.ArrayList;
 
 /**
- *Aplica las reglas del juego Uno
+ * Aplica las reglas del juego Uno
  * Maneja efectos de cartas especiales (comodin, roba4, reversa)
  */
 public class RuleEngine {
-    
+
     /**
      * Aplica el efecto de una carta especial
      * @param carta carta jugada
@@ -23,75 +23,108 @@ public class RuleEngine {
      * @param game Instancia del juego
      * @return Número de pasos que debe avanzar el turno
      */
-     public int aplicarEfecto(card carta, 
-                              player jugadorActual,
-                              ArrayList<player> jugadores,
-                              TurnManager turnManager,
-                              deck deck,
-                              DiscardPile pila,
-                              game game){
+    public int aplicarEfecto(card carta,
+                             player jugadorActual,
+                             ArrayList<player> jugadores,
+                             TurnManager turnManager,
+                             deck deck,
+                             DiscardPile pila,
+                             game game) {
+
         if(carta == null) return 1;
-        card.Tipo tipo = carta.getTipo(); 
+
+        card.Tipo tipo = carta.getTipo();
 
         switch(tipo){
 
             case REVERSA:
+
                 turnManager.reversa();
-                System.out.println(jugadorActual.getNombre() + " cambia la dirección!");
+
+                game.setMensaje(
+                        jugadorActual.getNombre()
+                        + " cambia la dirección!"
+                );
+
                 turnManager.avanzar(1);
+
                 return 1;
 
             case SALTO:
-                int idxSalto = (turnManager.getTurnoActual() 
-                + turnManager.getDireccion() 
-                + jugadores.size()) % jugadores.size();
+
+                int idxSalto = (
+                        turnManager.getTurnoActual()
+                        + turnManager.getDireccion()
+                        + jugadores.size()
+                ) % jugadores.size();
+
                 player saltado = jugadores.get(idxSalto);
-                System.out.println(saltado.getNombre() + " pierde su turno!");
+
+                game.setMensaje(
+                        saltado.getNombre()
+                        + " pierde su turno!"
+                );
+
                 turnManager.avanzar(2);
-            return 2;
+
+                return 2;
 
             case ROBA2:
-                 int idx2 = (turnManager.getTurnoActual() 
-                       + turnManager.getDireccion() 
-                       + jugadores.size()) % jugadores.size();
+
+                int idx2 = (
+                        turnManager.getTurnoActual()
+                        + turnManager.getDireccion()
+                        + jugadores.size()
+                ) % jugadores.size();
 
                 player siguiente = jugadores.get(idx2);
 
-                for(int i=0;i<2;i++){
-                    siguiente.getMano().agregarCarta(deck.robarCarta());
+                for(int i = 0; i < 2; i++){
+
+                    siguiente.getMano().agregarCarta(
+                            deck.robarCarta()
+                    );
                 }
 
-                System.out.println(siguiente.getNombre() + " roba 2 cartas y pierde turno");
+                game.setMensaje(
+                        siguiente.getNombre()
+                        + " roba 2 cartas y pierde turno"
+                );
+
                 turnManager.avanzar(2);
+
                 return 2;
 
-           case ROBA4:
-               int idx4 = (turnManager.getTurnoActual() 
-                       + turnManager.getDireccion() 
-                       + jugadores.size()) % jugadores.size();
+            case ROBA4:
+
+                int idx4 = (
+                        turnManager.getTurnoActual()
+                        + turnManager.getDireccion()
+                        + jugadores.size()
+                ) % jugadores.size();
 
                 player sig = jugadores.get(idx4);
 
-                for(int i=0;i<4;i++){
-                    sig.getMano().agregarCarta(deck.robarCarta());
+                for(int i = 0; i < 4; i++){
+
+                    sig.getMano().agregarCarta(
+                            deck.robarCarta()
+                    );
                 }
 
-                System.out.println(sig.getNombre() + " roba 4 cartas y pierde turno");
-
-                card.Color color = game.elegirColor(jugadorActual);
-                pila.ponerCarta(new card(color, card.Tipo.ROBA4));
+                game.setMensaje(
+                        sig.getNombre()
+                        + " roba 4 cartas y pierde turno"
+                );
                 turnManager.avanzar(2);
                 return 2;
 
             case COMODIN:
-                card.Color nuevoColor = game.elegirColor(jugadorActual);
-                pila.ponerCarta(new card(nuevoColor, card.Tipo.COMODIN));
                 turnManager.avanzar(1);
                 return 1;
-    
+
             default:
                 return 1;
         }
-        
     }
 }

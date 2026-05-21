@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.mycompany.uno.playerTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.784 s -- in com.mycompany.uno.playerTest

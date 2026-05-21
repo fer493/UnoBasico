@@ -7,35 +7,31 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- *Controla el flujo del juego Uno basico
- *Version semanadas 1-2 sin cartas especiales
+ * Controla el flujo del juego Uno basico
+ * Version semanas 1-2 sin cartas especiales
  * jugador vs computadora
  */
 public class game {
+
     private deck deck;
     private ArrayList<player> jugadores;
     private TurnManager turnManager;
     private RuleEngine ruleEngine;
     private DiscardPile pila;
-    //Es un lector de texto que permite leer datos desde una fuente de entrada
-    private Scanner scanner;
-    
-    /**Constructor interactivo: pide nombre y crea jugadores */
-    public game(){
-        scanner = new Scanner(System.in);
-        System.out.println("Ingresa nombre:");
-        String nombre = scanner.nextLine();
+    private String mensaje;
+    /** Constructor interactivo */
+    public game(String nombre) {
         deck = new deck();
         jugadores = new ArrayList<>();
         jugadores.add(new player(nombre, true));
+        jugadores.add(new player("Mari", false));
         jugadores.add(new player("Pepe", false));
         jugadores.add(new player("Toña", false));
-        jugadores.add(new player("Mari", false));
         turnManager = new TurnManager(jugadores.size());
         ruleEngine = new RuleEngine();
         pila = new DiscardPile();
+        mensaje = "";
     }
-    
     /** Constructor para pruebas */
     public game(boolean modoTest) {
         deck = new deck();
@@ -45,149 +41,167 @@ public class game {
         turnManager = new TurnManager(jugadores.size());
         ruleEngine = new RuleEngine();
         pila = new DiscardPile();
-    
+        mensaje = "";
     }
-    
     /** @return Mazo actual */
-    public deck getDeck(){
+    public deck getDeck() {
         return deck;
     }
-    
-    /** Lee confirmación S/N del usuario */
-    public String leerRespuestaSiNo(){
-        while(true){
-            String resp = scanner.next();
-
-            if(resp.equalsIgnoreCase("S") || resp.equalsIgnoreCase("N")){
-                return resp.toUpperCase();
-            }
-
-            System.out.println("Opción inválida. Escribe S o N:");
-        }
-    }
-    
-    /** Lee un número válido del usuario */
-    public int leerEnteroValido(){
-        while(true){
-            try{
-                return scanner.nextInt();
-            }catch(Exception e){
-                System.out.println("Entrada inválida");
-                scanner.next();
-            }
-        }
-    }
-    
-    /** Permite elegir color (humano o bot) */
-    public card.Color elegirColor(player jugador){
-
-        if(jugador.esHumano()){
-            System.out.println("Elige color: rojo, azul, verde, amarillo!");
-
-            while(true){
-                String color = scanner.next().trim().toLowerCase();
-
-                switch(color){
-                    case "rojo": return card.Color.ROJO;
-                    case "azul": return card.Color.AZUL;
-                    case "verde": return card.Color.VERDE;
-                    case "amarillo": return card.Color.AMARILLO;
-                }
-
-                System.out.println("Color inválido");
-            }
-        }
-        card.Color[] colores = {
-            card.Color.ROJO,
-            card.Color.AZUL,
-            card.Color.VERDE,
-            card.Color.AMARILLO
-        };
-        card.Color elegido = colores[(int)(Math.random()*4)];
-        System.out.println(jugador.getNombre() + " cambia a: " + elegido);
-
-        return elegido;
-    }
-    
-    /** Incia el juego completo */
-    public void iniciar(){
-        repartirCartas(); 
+    /** Inicia el juego completo */
+    public void iniciar() {
+        repartirCartas();
         card inicial;
-
-        do{
+        do {
             inicial = deck.robarCarta();
-
-            if(inicial == null){
-                System.out.println("No hay cartas para iniciar");
+            if (inicial == null) {
+                mensaje = "No hay cartas para iniciar";
                 return;
             }
-
-        }while(inicial.getTipo() != card.Tipo.NUMERO);
+        } while (inicial.getTipo() != card.Tipo.NUMERO);
         pila.ponerCarta(inicial);
-
-        System.out.println("Carta inicial: " + pila.getCartaActual());
-
-        boolean fin = false;
-
-        while(!fin){   
-            fin = turno();
-        }
+        mensaje = "Carta inicial: " + pila.getCartaActual();
     }
-    
-    /**Ejecuta un turno */
-    private boolean turno(){
+    /** Permite elegir color */
+    public card.Color elegirColor(player jugador){
+        // SI ES BOT
+        if(!jugador.esHumano()){
 
-        player actual = jugadores.get(turnManager.getTurnoActual());
+            card.Color[] colores = {
+                card.Color.ROJO,
+                card.Color.AZUL,
+                card.Color.VERDE,
+                card.Color.AMARILLO
+            };
 
-        mostrarEstado();
-        System.out.println("Turno de: " + actual.getNombre());
-
-        card jugada = actual.jugarTurno(this, pila.getCartaActual());
-
+            return colores[(int)(Math.random() * 4)];
+        }
+        return card.Color.ROJO;
+    }
+    /** Ejecuta un turno */
+    public boolean turno() {
+        player actual = jugadores.get(
+                turnManager.getTurnoActual()
+        );
+        card jugada = actual.jugarTurno(
+                this,
+                pila.getCartaActual()
+        );
         boolean cartaEspecial = false;
-
-        if(jugada != null){
+        if (jugada != null) {
             pila.ponerCarta(jugada);
-            System.out.println(actual.getNombre() + " juega: " + jugada);
 
-            cartaEspecial = (jugada.getTipo() != card.Tipo.NUMERO);
+            mensaje = actual.getNombre()
+                    + " juega: "
+                    + jugada;
+
+            cartaEspecial =
+                    (jugada.getTipo()
+                    != card.Tipo.NUMERO);
 
             ruleEngine.aplicarEfecto(
-                jugada,
-                actual,
-                jugadores,
-                turnManager,
-                deck,
-                pila,
-                this
+                    jugada,
+                    actual,
+                    jugadores,
+                    turnManager,
+                    deck,
+                    pila,
+                    this
             );
         }
-        if(actual.getMano().estaVacia()){
-            System.out.println("¡" + actual.getNombre() + " ha ganado!");
+        if (actual.getMano().estaVacia()) {
+
+            mensaje = "¡"
+                    + actual.getNombre()
+                    + " ha ganado!";
+
             return true;
         }
-        if(jugada == null){
+
+        if (jugada == null) {
+
             turnManager.siguienteTurno();
-        }else if(!cartaEspecial){
+
+        } else if (!cartaEspecial) {
+
             turnManager.siguienteTurno();
         }
+
         return false;
     }
-    
     /** Reparte cartas iniciales */
-    private void repartirCartas(){
-        for(int i=0; i<7; i++){
-            for(player p : jugadores){
-                p.getMano().agregarCarta(deck.robarCarta());
+    private void repartirCartas() {
+
+        for (int i = 0; i < 7; i++) {
+
+            for (player p : jugadores) {
+
+                p.getMano().agregarCarta(
+                        deck.robarCarta()
+                );
             }
         }
     }
+
+    /**
+     * Muestra el estado actual del juego
+     * Este metodo puede utilizarse para imprimir
+     * Información del juego como:
+     * Turno actual
+     * Cartas en mesa
+     * Estado de jugadores
+     */
+    public void mostrarEstado() {
+    }
+
+    /**
+     * Obtiene la lista de jugadores de la partida
+     * @return Lista de jugadores registrados en el juego
+     */
+    public ArrayList<player> getJugadores() {
+        return jugadores;
+    }
     
-    /** Muestra estado actual del juego */
-    public void mostrarEstado(){
-        System.out.println("\n--------------------");
-        System.out.println("Carta en mesa: " + pila.getCartaActual());
-        
-        System.out.println("--------------------\n");
+    /**
+     * Obtiene la pila de descarte del juego
+     * @return Pila de cartas descartadas
+     */
+    public DiscardPile getPila() {
+        return pila;
     }
+
+    /**
+     * Obtiene el administrados de turno
+     * @return Controlador encargado de los turnos
+     */
+    public TurnManager getTurnManager() {
+        return turnManager;
     }
+
+    /**
+     * Obtiene el mensaje actual del juego
+     * Generalmente se utiliza para mostrar eventos
+     * Importantes en el log
+     * @return Mensaje actual del juego
+     */
+    public String getMensaje() {
+        return mensaje;
+    }
+    
+    /**
+     * Establece un nuevo mensaje del juego
+     * @param mensaje Nuevo meensaje a almacenar
+     */
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+    
+    /**
+     * Obtiene el motor de reglas del juego
+     * Este componente se encarga de aplicar
+     * efectos especiales y reglas del UNO
+     * @return Motor de reglas del juego
+     */
+    public RuleEngine getRuleEngine(){
+        return ruleEngine;
+    }
+}

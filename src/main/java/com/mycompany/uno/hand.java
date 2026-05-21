@@ -76,4 +76,14 @@ public class hand {
         }
         return false;
     }
+    
+    /**
+     * Elimina una carta de la mano del jugador
+     * Remueve la carta ubicada en el índice indicado
+     * Se utilizac audno una carta es jugada o descartada
+     * @param indice Posición de la carta a eliminar
+     */
+    public void removerCarta(int indice){
+        cartas.remove(indice);
+    }
 }
